@@ -1,0 +1,121 @@
+import { useState } from "react";
+import { useLocation } from "wouter";
+import { useGetSellers, getGetSellersQueryKey } from "@workspace/api-client-react";
+import { SellerCard } from "@/components/seller-card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
+import { Search, Store } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+export default function Sellers() {
+  const [location, setLocation] = useLocation();
+  const searchParams = new URLSearchParams(window.location.search);
+  
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [locFilter, setLocFilter] = useState(searchParams.get("location") || "");
+  
+  // NOTE: The API type doesn't have a direct 'search' param for sellers, 
+  // but we can pass location and category. We'll pass location.
+  const { data, isLoading } = useGetSellers(
+    { location: locFilter || undefined },
+    { query: { queryKey: getGetSellersQueryKey({ location: locFilter }) } }
+  );
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (search) params.append("search", search);
+    if (locFilter) params.append("location", locFilter);
+    setLocation(`/sellers?${params.toString()}`);
+  };
+
+  // Client side search filtering since API might not support it fully yet
+  const filteredSellers = data?.sellers.filter(s => 
+    !search || 
+    s.storeName.toLowerCase().includes(search.toLowerCase()) || 
+    s.description?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      {/* Header & Hero */}
+      <div className="bg-primary rounded-3xl p-8 md:p-12 mb-10 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay"></div>
+        <div className="relative z-10 max-w-2xl">
+          <h1 className="text-3xl md:text-5xl font-bold font-serif mb-4">Discover Sellers</h1>
+          <p className="text-primary-foreground/90 text-lg mb-8">
+            Connect directly with businesses bringing the best of Africa to Malaysia. 
+            Support the community and find authentic products.
+          </p>
+          
+          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Input 
+                placeholder="Search by store name..." 
+                className="pl-10 h-12 bg-white text-foreground border-transparent rounded-xl md:rounded-full shadow-sm"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <select 
+              className="h-12 px-4 rounded-xl md:rounded-full bg-white text-foreground border-transparent shadow-sm outline-none cursor-pointer sm:w-48"
+              value={locFilter}
+              onChange={(e) => {
+                setLocFilter(e.target.value);
+                // Trigger form submit
+                setTimeout(() => {
+                  const form = e.target.closest('form');
+                  if (form) form.requestSubmit();
+                }, 0);
+              }}
+            >
+              <option value="">All Locations</option>
+              <option value="KL">Kuala Lumpur</option>
+              <option value="Selangor">Selangor</option>
+              <option value="Penang">Penang</option>
+              <option value="Johor">Johor</option>
+            </select>
+            <Button type="submit" variant="secondary" className="h-12 rounded-xl md:rounded-full px-8 font-bold">
+              Find Stores
+            </Button>
+          </form>
+        </div>
+      </div>
+
+      <div className="mb-6 flex justify-between items-center">
+        <h2 className="text-2xl font-bold">All Stores</h2>
+        <span className="text-muted-foreground bg-muted px-3 py-1 rounded-full text-sm font-medium">
+          {isLoading ? "..." : `${filteredSellers?.length || 0} stores`}
+        </span>
+      </div>
+
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {[...Array(8)].map((_, i) => (
+            <Skeleton key={i} className="w-full h-[320px] rounded-2xl" />
+          ))}
+        </div>
+      ) : filteredSellers && filteredSellers.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredSellers.map((seller, i) => (
+            <SellerCard key={seller.id} seller={seller} index={i} />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-20 bg-white rounded-3xl border border-border shadow-sm">
+          <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+            <Store className="w-10 h-10 text-muted-foreground" />
+          </div>
+          <h3 className="text-2xl font-bold mb-2">No sellers found</h3>
+          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+            We couldn't find any sellers matching your criteria. Try adjusting your search or location filter.
+          </p>
+          <Button onClick={() => { setSearch(""); setLocFilter(""); }} variant="outline" className="rounded-full">
+            Clear all filters
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}

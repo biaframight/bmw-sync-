@@ -1,0 +1,62 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "2LSr2oL_uqAAoYidnphTT"
+uri = "file://artifacts/afrinza/public/images/jollof.png"
+type = "image"
+title = "Jollof rice plate"
+
+[[generated]]
+id = "IEPGR2Yb1hJYeiQz5O3S3"
+uri = "file://artifacts/afrinza/public/images/ankara.png"
+type = "image"
+title = "Ankara dress"
+
+[[generated]]
+id = "k5hXE-cNwHJ9ZDiowkedt"
+uri = "file://artifacts/afrinza/public/images/braids.png"
+type = "image"
+title = "Hair braiding"
+
+[[generated]]
+id = "YLWsIsbihu8d8kdxFRXpq"
+uri = "file://artifacts/afrinza/public/images/shito.png"
+type = "image"
+title = "Shito sauce jar"
+
+[[generated]]
+id = "m-ZLhghDZtM9oaw9GAT9h"
+uri = "file://artifacts/afrinza/public/images/plantains.png"
+type = "image"
+title = "Fresh plantains"
+
+[[generated]]
+id = "IqxFKV3D8LblguB-JMyB8"
+uri = "file://artifacts/afrinza/public/images/beads.png"
+type = "image"
+title = "Beaded necklace"
+
+[[generated]]
+id = "xZgJUUupAkPWP4V1k_jeu"
+uri = "file://artifacts/afrinza/public/images/seller-food.png"
+type = "image"
+title = "African food stall"
+
+[[generated]]
+id = "hrYRPIJBS14QADSMmMxUp"
+uri = "file://artifacts/afrinza/public/images/seller-fashion.png"
+type = "image"
+title = "African fashion boutique"
+
+[[generated]]
+id = "h5xgwy0aWuSQda4FZatWw"
+uri = "file://artifacts/afrinza/public/images/seller-beauty.png"
+type = "image"
+title = "African beauty salon"
+
+[[generated]]
+id = "J6eMQSRiVhs9zEAwSM9Q4"
+uri = "file://artifacts/afrinza/public/images/seller-grocery.png"
+type = "image"
+title = "African grocery store"

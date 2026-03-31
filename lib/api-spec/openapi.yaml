@@ -1,22 +1,35 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Afrinza Marketplace API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: products
+    description: Product listings
+  - name: sellers
+    description: Seller profiles
+  - name: categories
+    description: Product categories
+  - name: reviews
+    description: Product reviews
+  - name: cart
+    description: Shopping cart
+  - name: orders
+    description: Order management
+  - name: featured
+    description: Featured and sponsored content
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +37,328 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /products:
+    get:
+      operationId: getProducts
+      tags: [products]
+      summary: List all products with optional filters
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: location
+          in: query
+          schema:
+            type: string
+        - name: minPrice
+          in: query
+          schema:
+            type: number
+        - name: maxPrice
+          in: query
+          schema:
+            type: number
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: sellerId
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of products
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductListResponse"
+    post:
+      operationId: createProduct
+      tags: [products]
+      summary: Create a new product listing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProductRequest"
+      responses:
+        "201":
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+
+  /products/{id}:
+    get:
+      operationId: getProduct
+      tags: [products]
+      summary: Get a product by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductDetail"
+        "404":
+          description: Not found
+
+  /products/featured:
+    get:
+      operationId: getFeaturedProducts
+      tags: [featured]
+      summary: Get featured/sponsored product listings
+      responses:
+        "200":
+          description: Featured products
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductListResponse"
+
+  /products/nearby:
+    get:
+      operationId: getNearbyProducts
+      tags: [products]
+      summary: Get products near a location
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Nearby products
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductListResponse"
+
+  /sellers:
+    get:
+      operationId: getSellers
+      tags: [sellers]
+      summary: List all sellers
+      parameters:
+        - name: location
+          in: query
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of sellers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SellerListResponse"
+    post:
+      operationId: createSeller
+      tags: [sellers]
+      summary: Register as a seller
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSellerRequest"
+      responses:
+        "201":
+          description: Seller created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Seller"
+
+  /sellers/featured:
+    get:
+      operationId: getFeaturedSellers
+      tags: [featured]
+      summary: Get featured/premium sellers
+      responses:
+        "200":
+          description: Featured sellers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SellerListResponse"
+
+  /sellers/{id}:
+    get:
+      operationId: getSeller
+      tags: [sellers]
+      summary: Get a seller profile
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Seller profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SellerDetail"
+        "404":
+          description: Not found
+
+  /categories:
+    get:
+      operationId: getCategories
+      tags: [categories]
+      summary: Get all product categories
+      responses:
+        "200":
+          description: Categories list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoryListResponse"
+
+  /reviews:
+    get:
+      operationId: getReviews
+      tags: [reviews]
+      summary: Get reviews for a product
+      parameters:
+        - name: productId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Product reviews
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewListResponse"
+    post:
+      operationId: createReview
+      tags: [reviews]
+      summary: Submit a review for a product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateReviewRequest"
+      responses:
+        "201":
+          description: Review created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+
+  /cart:
+    get:
+      operationId: getCart
+      tags: [cart]
+      summary: Get cart items for a session
+      parameters:
+        - name: sessionId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Cart contents
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartResponse"
+    post:
+      operationId: addToCart
+      tags: [cart]
+      summary: Add item to cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddToCartRequest"
+      responses:
+        "201":
+          description: Item added to cart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartItem"
+
+  /cart/{id}:
+    delete:
+      operationId: removeFromCart
+      tags: [cart]
+      summary: Remove item from cart
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Item removed
+
+  /orders:
+    post:
+      operationId: createOrder
+      tags: [orders]
+      summary: Place an order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderRequest"
+      responses:
+        "201":
+          description: Order placed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+
+  /marketplace/stats:
+    get:
+      operationId: getMarketplaceStats
+      tags: [featured]
+      summary: Get marketplace stats (total sellers, products, locations)
+      responses:
+        "200":
+          description: Marketplace stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketplaceStats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +369,425 @@ components:
       required:
         - status
 
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        category:
+          type: string
+        location:
+          type: string
+        imageUrl:
+          type: string
+        sellerId:
+          type: integer
+        sellerName:
+          type: string
+        sellerWhatsapp:
+          type: string
+        sellerAvatar:
+          type: string
+        isSponsored:
+          type: boolean
+        isPremiumSeller:
+          type: boolean
+        rating:
+          type: number
+        reviewCount:
+          type: integer
+        stock:
+          type: integer
+        createdAt:
+          type: string
+      required:
+        - id
+        - title
+        - price
+        - category
+        - location
+        - sellerId
+        - sellerName
+        - sellerWhatsapp
+        - isSponsored
+        - isPremiumSeller
+        - rating
+        - reviewCount
+
+    ProductDetail:
+      allOf:
+        - $ref: "#/components/schemas/Product"
+        - type: object
+          properties:
+            images:
+              type: array
+              items:
+                type: string
+            deliveryOptions:
+              type: array
+              items:
+                type: string
+            paymentMethods:
+              type: array
+              items:
+                type: string
+
+    ProductListResponse:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+        total:
+          type: integer
+      required:
+        - products
+        - total
+
+    CreateProductRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        category:
+          type: string
+        location:
+          type: string
+        imageUrl:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        sellerId:
+          type: integer
+        stock:
+          type: integer
+        deliveryOptions:
+          type: array
+          items:
+            type: string
+        paymentMethods:
+          type: array
+          items:
+            type: string
+      required:
+        - title
+        - price
+        - category
+        - location
+        - sellerId
+
+    Seller:
+      type: object
+      properties:
+        id:
+          type: integer
+        storeName:
+          type: string
+        ownerName:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+        whatsapp:
+          type: string
+        avatarUrl:
+          type: string
+        bannerUrl:
+          type: string
+        isPremium:
+          type: boolean
+        rating:
+          type: number
+        reviewCount:
+          type: integer
+        productCount:
+          type: integer
+        joinedAt:
+          type: string
+      required:
+        - id
+        - storeName
+        - ownerName
+        - location
+        - whatsapp
+        - isPremium
+        - rating
+        - reviewCount
+        - productCount
+
+    SellerDetail:
+      allOf:
+        - $ref: "#/components/schemas/Seller"
+        - type: object
+          properties:
+            products:
+              type: array
+              items:
+                $ref: "#/components/schemas/Product"
+
+    SellerListResponse:
+      type: object
+      properties:
+        sellers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Seller"
+        total:
+          type: integer
+      required:
+        - sellers
+        - total
+
+    CreateSellerRequest:
+      type: object
+      properties:
+        storeName:
+          type: string
+        ownerName:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+        whatsapp:
+          type: string
+        avatarUrl:
+          type: string
+      required:
+        - storeName
+        - ownerName
+        - location
+        - whatsapp
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        icon:
+          type: string
+        productCount:
+          type: integer
+      required:
+        - id
+        - name
+        - slug
+        - productCount
+
+    CategoryListResponse:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: "#/components/schemas/Category"
+      required:
+        - categories
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+        productId:
+          type: integer
+        buyerName:
+          type: string
+        rating:
+          type: integer
+        comment:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - productId
+        - buyerName
+        - rating
+        - createdAt
+
+    ReviewListResponse:
+      type: object
+      properties:
+        reviews:
+          type: array
+          items:
+            $ref: "#/components/schemas/Review"
+        averageRating:
+          type: number
+        total:
+          type: integer
+      required:
+        - reviews
+        - averageRating
+        - total
+
+    CreateReviewRequest:
+      type: object
+      properties:
+        productId:
+          type: integer
+        buyerName:
+          type: string
+        rating:
+          type: integer
+        comment:
+          type: string
+      required:
+        - productId
+        - buyerName
+        - rating
+
+    CartItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        sessionId:
+          type: string
+        productId:
+          type: integer
+        product:
+          $ref: "#/components/schemas/Product"
+        quantity:
+          type: integer
+      required:
+        - id
+        - sessionId
+        - productId
+        - quantity
+
+    CartResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItem"
+        total:
+          type: number
+        itemCount:
+          type: integer
+      required:
+        - items
+        - total
+        - itemCount
+
+    AddToCartRequest:
+      type: object
+      properties:
+        sessionId:
+          type: string
+        productId:
+          type: integer
+        quantity:
+          type: integer
+      required:
+        - sessionId
+        - productId
+        - quantity
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+        sessionId:
+          type: string
+        buyerName:
+          type: string
+        buyerPhone:
+          type: string
+        buyerAddress:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItem"
+        total:
+          type: number
+        paymentMethod:
+          type: string
+        deliveryMethod:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - sessionId
+        - buyerName
+        - buyerPhone
+        - total
+        - paymentMethod
+        - deliveryMethod
+        - status
+
+    CreateOrderRequest:
+      type: object
+      properties:
+        sessionId:
+          type: string
+        buyerName:
+          type: string
+        buyerPhone:
+          type: string
+        buyerAddress:
+          type: string
+        paymentMethod:
+          type: string
+        deliveryMethod:
+          type: string
+      required:
+        - sessionId
+        - buyerName
+        - buyerPhone
+        - paymentMethod
+        - deliveryMethod
+
+    MarketplaceStats:
+      type: object
+      properties:
+        totalSellers:
+          type: integer
+        totalProducts:
+          type: integer
+        totalLocations:
+          type: integer
+        totalCategories:
+          type: integer
+        featuredSellers:
+          type: integer
+      required:
+        - totalSellers
+        - totalProducts
+        - totalLocations
+        - totalCategories
+        - featuredSellers
