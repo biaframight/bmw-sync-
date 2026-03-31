@@ -60,7 +60,9 @@ export function Layout({ children }: LayoutProps) {
               </SheetTrigger>
               <SheetContent side="left" className="w-[80vw] sm:w-[350px]">
                 <SheetHeader>
-                  <SheetTitle className="text-left text-2xl font-bold text-primary font-serif">Afrinza.</SheetTitle>
+                  <SheetTitle className="text-left">
+                    <img src="/afrinza-logo-nobg.png" alt="Afrinza" className="h-10 w-auto" />
+                  </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-4 mt-8">
                   <Link href="/" className="flex items-center gap-3 px-3 py-2 text-lg rounded-md hover:bg-muted font-medium">
@@ -82,8 +84,8 @@ export function Layout({ children }: LayoutProps) {
           </div>
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-primary font-serif tracking-tight">Afrinza<span className="text-secondary">.</span></span>
+          <Link href="/" className="flex items-center">
+            <img src="/afrinza-logo-nobg.png" alt="Afrinza" className="h-14 w-auto" />
           </Link>
 
           {/* Desktop Nav Links */}
@@ -150,8 +152,8 @@ export function Layout({ children }: LayoutProps) {
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12">
             <div className="col-span-1 md:col-span-1 lg:col-span-2">
-              <Link href="/" className="flex items-center gap-2 mb-4">
-                <span className="text-2xl font-bold text-primary font-serif tracking-tight">Afrinza<span className="text-secondary">.</span></span>
+              <Link href="/" className="flex items-center mb-4">
+                <img src="/afrinza-logo-nobg.png" alt="Afrinza" className="h-12 w-auto" />
               </Link>
               <p className="text-muted-foreground text-sm max-w-sm mb-6 leading-relaxed">
                 Your African Marketplace in Malaysia. Find home, anywhere. Buy and sell authentic food, fashion, and services.
