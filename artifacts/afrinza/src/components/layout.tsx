@@ -47,14 +47,14 @@ export function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-[100dvh] flex flex-col bg-background">
-      <header className="sticky top-0 z-50 w-full border-b border-yellow-900/30 bg-zinc-950 shadow-lg">
+      <header className="sticky top-0 z-50 w-full border-b border-amber-700/40 bg-amber-500 shadow-lg">
         <div className="container mx-auto px-4 h-20 flex items-center justify-between gap-4">
           
           {/* Mobile Menu */}
           <div className="md:hidden flex items-center">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="-ml-2 text-yellow-100 hover:bg-white/10 hover:text-yellow-300">
+                <Button variant="ghost" size="icon" className="-ml-2 text-amber-950 hover:bg-amber-600/40 hover:text-black">
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
@@ -90,10 +90,10 @@ export function Layout({ children }: LayoutProps) {
 
           {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-6 mx-4">
-            <Link href="/products" className="text-sm font-medium text-yellow-100/80 hover:text-yellow-400 transition-colors">
+            <Link href="/products" className="text-sm font-bold text-amber-950 hover:text-black transition-colors">
               Products
             </Link>
-            <Link href="/sellers" className="text-sm font-medium text-yellow-100/80 hover:text-yellow-400 transition-colors">
+            <Link href="/sellers" className="text-sm font-bold text-amber-950 hover:text-black transition-colors">
               Sellers
             </Link>
           </nav>
@@ -101,10 +101,10 @@ export function Layout({ children }: LayoutProps) {
           {/* Search Bar (Desktop) */}
           <div className="hidden md:flex flex-1 max-w-md mx-auto">
             <form onSubmit={handleSearch} className="relative w-full flex items-center">
-              <Search className="absolute left-3 w-4 h-4 text-yellow-100/50" />
+              <Search className="absolute left-3 w-4 h-4 text-amber-800" />
               <Input 
                 placeholder="What are you looking for?" 
-                className="pl-9 pr-4 rounded-full bg-white/10 border-white/10 text-white placeholder:text-yellow-100/40 focus-visible:ring-yellow-500/30 h-10"
+                className="pl-9 pr-4 rounded-full bg-white/70 border-amber-300 text-amber-950 placeholder:text-amber-700/60 focus-visible:ring-amber-700/30 h-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -113,8 +113,8 @@ export function Layout({ children }: LayoutProps) {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <Link href="/cart" className="relative inline-flex items-center justify-center p-2 rounded-full hover:bg-white/10 transition-colors">
-              <ShoppingCart className="w-6 h-6 text-yellow-100" />
+            <Link href="/cart" className="relative inline-flex items-center justify-center p-2 rounded-full hover:bg-amber-600/40 transition-colors">
+              <ShoppingCart className="w-6 h-6 text-amber-950" />
               {cartItemCount > 0 && (
                 <span className="absolute top-0 right-0 bg-secondary text-secondary-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                   {cartItemCount > 9 ? '9+' : cartItemCount}
@@ -123,7 +123,7 @@ export function Layout({ children }: LayoutProps) {
             </Link>
             
             <div className="hidden md:block ml-2">
-              <Button asChild className="rounded-full bg-yellow-500 hover:bg-yellow-400 text-black font-semibold shadow-sm">
+              <Button asChild className="rounded-full bg-amber-950 hover:bg-black text-amber-400 font-semibold shadow-sm border border-amber-700">
                 <Link href="/become-seller">Become a Seller</Link>
               </Button>
             </div>
@@ -133,10 +133,10 @@ export function Layout({ children }: LayoutProps) {
         {/* Mobile Search Bar */}
         <div className="md:hidden px-4 pb-3">
           <form onSubmit={handleSearch} className="relative w-full flex items-center">
-            <Search className="absolute left-3 w-4 h-4 text-yellow-100/50" />
+            <Search className="absolute left-3 w-4 h-4 text-amber-800" />
             <Input 
               placeholder="Search products..." 
-              className="pl-9 pr-4 rounded-full bg-white/10 border-white/10 text-white placeholder:text-yellow-100/40 focus-visible:ring-yellow-500/30 h-10"
+              className="pl-9 pr-4 rounded-full bg-white/70 border-amber-300 text-amber-950 placeholder:text-amber-700/60 focus-visible:ring-amber-700/30 h-10"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
