@@ -10,6 +10,9 @@ import {
   Home,
   PackageSearch,
   MessageCircleQuestion,
+  Sparkles,
+  Info,
+  HelpCircle,
 } from "lucide-react";
 import { useGetCart } from "@workspace/api-client-react";
 import { getSessionId } from "@/lib/session";
@@ -65,18 +68,27 @@ export function Layout({ children }: LayoutProps) {
                     <AfrinzaLogo height={38} />
                   </SheetTitle>
                 </SheetHeader>
-                <div className="flex flex-col gap-4 mt-8">
-                  <Link href="/" className="flex items-center gap-3 px-3 py-2 text-lg rounded-md hover:bg-muted font-medium">
+                <div className="flex flex-col gap-2 mt-8">
+                  <Link href="/" className="flex items-center gap-3 px-3 py-2 text-base rounded-md hover:bg-muted font-medium">
                     <Home className="h-5 w-5 text-muted-foreground" /> Home
                   </Link>
-                  <Link href="/products" className="flex items-center gap-3 px-3 py-2 text-lg rounded-md hover:bg-muted font-medium">
+                  <Link href="/products" className="flex items-center gap-3 px-3 py-2 text-base rounded-md hover:bg-muted font-medium">
                     <PackageSearch className="h-5 w-5 text-muted-foreground" /> Products
                   </Link>
-                  <Link href="/sellers" className="flex items-center gap-3 px-3 py-2 text-lg rounded-md hover:bg-muted font-medium">
+                  <Link href="/sellers" className="flex items-center gap-3 px-3 py-2 text-base rounded-md hover:bg-muted font-medium">
                     <Store className="h-5 w-5 text-muted-foreground" /> Sellers
                   </Link>
+                  <Link href="/products?category=Services" className="flex items-center gap-3 px-3 py-2 text-base rounded-md hover:bg-muted font-medium">
+                    <Sparkles className="h-5 w-5 text-muted-foreground" /> Services
+                  </Link>
+                  <Link href="/about" className="flex items-center gap-3 px-3 py-2 text-base rounded-md hover:bg-muted font-medium">
+                    <Info className="h-5 w-5 text-muted-foreground" /> About
+                  </Link>
+                  <Link href="/how-it-works" className="flex items-center gap-3 px-3 py-2 text-base rounded-md hover:bg-muted font-medium">
+                    <HelpCircle className="h-5 w-5 text-muted-foreground" /> How it Works
+                  </Link>
                   <div className="h-px bg-border my-2" />
-                  <Link href="/become-seller" className="flex items-center gap-3 px-3 py-2 text-lg rounded-md text-primary bg-primary/5 hover:bg-primary/10 font-medium">
+                  <Link href="/become-seller" className="flex items-center gap-3 px-3 py-2 text-base rounded-md text-primary bg-primary/5 hover:bg-primary/10 font-medium">
                     <Store className="h-5 w-5" /> Become a Seller
                   </Link>
                 </div>
@@ -90,12 +102,21 @@ export function Layout({ children }: LayoutProps) {
           </Link>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden md:flex items-center gap-6 mx-4">
-            <Link href="/products" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+          <nav className="hidden md:flex items-center gap-4 mx-3">
+            <Link href="/products" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors whitespace-nowrap">
               Products
             </Link>
-            <Link href="/sellers" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+            <Link href="/sellers" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors whitespace-nowrap">
               Sellers
+            </Link>
+            <Link href="/products?category=Services" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors whitespace-nowrap">
+              Services
+            </Link>
+            <Link href="/about" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors whitespace-nowrap">
+              About
+            </Link>
+            <Link href="/how-it-works" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors whitespace-nowrap">
+              How it Works
             </Link>
           </nav>
 
