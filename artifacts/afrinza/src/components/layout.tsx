@@ -1,6 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AfrinzaLogo } from "@/components/afrinza-logo";
 import { 
   ShoppingCart, 
   Search, 
@@ -61,9 +62,7 @@ export function Layout({ children }: LayoutProps) {
               <SheetContent side="left" className="w-[80vw] sm:w-[350px]">
                 <SheetHeader>
                   <SheetTitle className="text-left">
-                    <div className="bg-black rounded-xl px-3 py-1 inline-flex items-center">
-                      <img src="/afrinza-logo-v2-nobg.png" alt="Afrinza" className="h-10 w-auto" />
-                    </div>
+                    <AfrinzaLogo height={38} />
                   </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-4 mt-8">
@@ -87,9 +86,7 @@ export function Layout({ children }: LayoutProps) {
 
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <div className="bg-black rounded-xl px-3 py-1 flex items-center">
-              <img src="/afrinza-logo-v2-nobg.png" alt="Afrinza" className="h-10 w-auto" />
-            </div>
+            <AfrinzaLogo height={44} />
           </Link>
 
           {/* Desktop Nav Links */}
@@ -157,9 +154,7 @@ export function Layout({ children }: LayoutProps) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12">
             <div className="col-span-1 md:col-span-1 lg:col-span-2">
               <Link href="/" className="inline-flex items-center mb-4">
-                <div className="bg-black rounded-xl px-3 py-1.5 inline-flex items-center">
-                  <img src="/afrinza-logo-v2-nobg.png" alt="Afrinza" className="h-12 w-auto" />
-                </div>
+                <AfrinzaLogo height={48} />
               </Link>
               <p className="text-muted-foreground text-sm max-w-sm mb-6 leading-relaxed mt-4">
                 Your African Marketplace in Malaysia. Find home, anywhere. Buy and sell authentic food, fashion, and services.
