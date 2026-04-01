@@ -47,23 +47,21 @@ export function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-[100dvh] flex flex-col bg-background">
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow-sm">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-50 w-full border-b border-yellow-900/30 bg-zinc-950 shadow-lg">
+        <div className="container mx-auto px-4 h-20 flex items-center justify-between gap-4">
           
           {/* Mobile Menu */}
           <div className="md:hidden flex items-center">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="-ml-2">
+                <Button variant="ghost" size="icon" className="-ml-2 text-yellow-100 hover:bg-white/10 hover:text-yellow-300">
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-[80vw] sm:w-[350px]">
                 <SheetHeader>
                   <SheetTitle className="text-left">
-                    <div className="bg-black rounded-xl px-3 py-1 inline-flex items-center">
-                      <img src="/afrinza-logo-nobg.png" alt="Afrinza" className="h-10 w-auto" />
-                    </div>
+                    <img src="/afrinza-logo-v2-nobg.png" alt="Afrinza" className="h-12 w-auto" style={{ filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.6))" }} />
                   </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-4 mt-8">
@@ -87,17 +85,15 @@ export function Layout({ children }: LayoutProps) {
 
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <div className="bg-black rounded-xl px-3 py-1 flex items-center">
-              <img src="/afrinza-logo-nobg.png" alt="Afrinza" className="h-10 w-auto" />
-            </div>
+            <img src="/afrinza-logo-v2-nobg.png" alt="Afrinza" className="h-[72px] w-auto" />
           </Link>
 
           {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-6 mx-4">
-            <Link href="/products" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+            <Link href="/products" className="text-sm font-medium text-yellow-100/80 hover:text-yellow-400 transition-colors">
               Products
             </Link>
-            <Link href="/sellers" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+            <Link href="/sellers" className="text-sm font-medium text-yellow-100/80 hover:text-yellow-400 transition-colors">
               Sellers
             </Link>
           </nav>
@@ -105,10 +101,10 @@ export function Layout({ children }: LayoutProps) {
           {/* Search Bar (Desktop) */}
           <div className="hidden md:flex flex-1 max-w-md mx-auto">
             <form onSubmit={handleSearch} className="relative w-full flex items-center">
-              <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
+              <Search className="absolute left-3 w-4 h-4 text-yellow-100/50" />
               <Input 
                 placeholder="What are you looking for?" 
-                className="pl-9 pr-4 rounded-full bg-muted/50 border-transparent focus-visible:ring-primary/20 h-10"
+                className="pl-9 pr-4 rounded-full bg-white/10 border-white/10 text-white placeholder:text-yellow-100/40 focus-visible:ring-yellow-500/30 h-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -117,8 +113,8 @@ export function Layout({ children }: LayoutProps) {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <Link href="/cart" className="relative inline-flex items-center justify-center p-2 rounded-full hover:bg-muted transition-colors">
-              <ShoppingCart className="w-6 h-6 text-foreground" />
+            <Link href="/cart" className="relative inline-flex items-center justify-center p-2 rounded-full hover:bg-white/10 transition-colors">
+              <ShoppingCart className="w-6 h-6 text-yellow-100" />
               {cartItemCount > 0 && (
                 <span className="absolute top-0 right-0 bg-secondary text-secondary-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                   {cartItemCount > 9 ? '9+' : cartItemCount}
@@ -127,7 +123,7 @@ export function Layout({ children }: LayoutProps) {
             </Link>
             
             <div className="hidden md:block ml-2">
-              <Button asChild variant="default" className="rounded-full bg-primary hover:bg-primary/90 text-white shadow-sm">
+              <Button asChild className="rounded-full bg-yellow-500 hover:bg-yellow-400 text-black font-semibold shadow-sm">
                 <Link href="/become-seller">Become a Seller</Link>
               </Button>
             </div>
@@ -137,10 +133,10 @@ export function Layout({ children }: LayoutProps) {
         {/* Mobile Search Bar */}
         <div className="md:hidden px-4 pb-3">
           <form onSubmit={handleSearch} className="relative w-full flex items-center">
-            <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
+            <Search className="absolute left-3 w-4 h-4 text-yellow-100/50" />
             <Input 
               placeholder="Search products..." 
-              className="pl-9 pr-4 rounded-full bg-muted/50 border-transparent focus-visible:ring-primary/20 h-10"
+              className="pl-9 pr-4 rounded-full bg-white/10 border-white/10 text-white placeholder:text-yellow-100/40 focus-visible:ring-yellow-500/30 h-10"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -157,9 +153,7 @@ export function Layout({ children }: LayoutProps) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12">
             <div className="col-span-1 md:col-span-1 lg:col-span-2">
               <Link href="/" className="inline-flex items-center mb-4">
-                <div className="bg-black rounded-xl px-3 py-1.5 inline-flex items-center">
-                  <img src="/afrinza-logo-nobg.png" alt="Afrinza" className="h-12 w-auto" />
-                </div>
+                <img src="/afrinza-logo-v2-nobg.png" alt="Afrinza" className="h-14 w-auto" style={{ filter: "drop-shadow(0 1px 4px rgba(0,0,0,0.65))" }} />
               </Link>
               <p className="text-muted-foreground text-sm max-w-sm mb-6 leading-relaxed">
                 Your African Marketplace in Malaysia. Find home, anywhere. Buy and sell authentic food, fashion, and services.
