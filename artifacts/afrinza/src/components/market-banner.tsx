@@ -30,7 +30,7 @@ export function MarketBanner() {
           ))}
         </div>
         <span className="hidden sm:flex items-center gap-1 text-white/60">
-          <ArrowRight className="w-3 h-3" /> Global launch 2025
+          <ArrowRight className="w-3 h-3" /> Expanding worldwide
         </span>
       </div>
       <button
