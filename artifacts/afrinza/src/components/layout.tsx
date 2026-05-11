@@ -15,7 +15,7 @@ import {
   Info,
   HelpCircle,
 } from "lucide-react";
-import { useGetCart } from "@workspace/api-client-react";
+import { useGetCart } from "@/hooks/use-marketplace";
 import { getSessionId } from "@/lib/session";
 import { useState } from "react";
 import {
@@ -35,11 +35,7 @@ export function Layout({ children }: LayoutProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const sessionId = getSessionId();
   
-  const { data: cartData } = useGetCart({ sessionId }, { 
-    query: { 
-      queryKey: ["cart", sessionId]
-    } 
-  });
+  const { data: cartData } = useGetCart({ sessionId });
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

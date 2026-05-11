@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { 
-  useGetCart, 
-  getGetCartQueryKey,
-  useCreateOrder
-} from "@workspace/api-client-react";
+import { useGetCart, useCreateOrder, keys } from "@/hooks/use-marketplace";
 import { getSessionId } from "@/lib/session";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,7 +35,11 @@ const checkoutSchema = z.object({
 
 type CheckoutFormValues = z.infer<typeof checkoutSchema>;
 
-function buildWhatsAppMessage(data: CheckoutFormValues, items: { title: string; qty: number; price: string }[], total: string) {
+function buildWhatsAppMessage(
+  data: CheckoutFormValues,
+  items: { title: string; qty: number; price: string }[],
+  total: string
+) {
   const lines = [
     `*New Order from Afrinza Marketplace*`,
     ``,
@@ -64,13 +64,9 @@ export default function Checkout() {
   const sessionId = getSessionId();
   const queryClient = useQueryClient();
   const [isSuccess, setIsSuccess] = useState(false);
-  const [sellerWhatsApp, setSellerWhatsApp] = useState<string>(DEFAULT_WHATSAPP);
+  const [sellerWhatsApp] = useState<string>(DEFAULT_WHATSAPP);
 
-  const { data: cart, isLoading } = useGetCart(
-    { sessionId },
-    { query: { queryKey: getGetCartQueryKey({ sessionId }) } }
-  );
-
+  const { data: cart, isLoading } = useGetCart({ sessionId });
   const createOrder = useCreateOrder();
 
   const form = useForm<CheckoutFormValues>({
@@ -85,37 +81,40 @@ export default function Checkout() {
   });
 
   const onSubmit = (data: CheckoutFormValues) => {
-    createOrder.mutate({
-      data: { sessionId, ...data }
-    }, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: getGetCartQueryKey({ sessionId }) });
-
-        // Build WhatsApp redirect
-        const items = (cart?.items || []).map((it) => ({
-          title: it.product?.title || "Item",
-          qty: it.quantity,
-          price: (parseFloat(String(it.product?.price || 0)) * it.quantity).toFixed(2),
-        }));
-        const total = parseFloat(String(cart?.total || 0)).toFixed(2);
-        const message = buildWhatsAppMessage(data, items, total);
-
-        // Use seller WhatsApp if available in first item, else default
-        const phone = sellerWhatsApp.replace(/\D/g, "");
-        const waUrl = `https://wa.me/${phone}?text=${message}`;
-
-        setIsSuccess(true);
-        window.scrollTo(0, 0);
-
-        // Open WhatsApp after short delay
-        setTimeout(() => {
-          window.open(waUrl, "_blank");
-        }, 800);
+    createOrder.mutate(
+      {
+        data: {
+          sessionId,
+          buyerName: data.buyerName,
+          buyerPhone: data.buyerPhone,
+          buyerAddress: data.buyerAddress,
+          paymentMethod: data.paymentMethod,
+          deliveryMethod: data.deliveryMethod,
+        },
       },
-      onError: () => {
-        toast.error("Failed to place order. Please try again.");
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: keys.cart(sessionId) });
+
+          const items = (cart?.items || []).map((it) => ({
+            title: it.product?.title || "Item",
+            qty: it.quantity,
+            price: (parseFloat(String(it.product?.price || 0)) * it.quantity).toFixed(2),
+          }));
+          const total = parseFloat(String(cart?.total || 0)).toFixed(2);
+          const message = buildWhatsAppMessage(data, items, total);
+          const phone = sellerWhatsApp.replace(/\D/g, "");
+          const waUrl = `https://wa.me/${phone}?text=${message}`;
+
+          setIsSuccess(true);
+          window.scrollTo(0, 0);
+          setTimeout(() => { window.open(waUrl, "_blank"); }, 800);
+        },
+        onError: () => {
+          toast.error("Failed to place order. Please try again.");
+        },
       }
-    });
+    );
   };
 
   if (isSuccess) {
@@ -124,7 +123,7 @@ export default function Checkout() {
       qty: it.quantity,
       price: (parseFloat(String(it.product?.price || 0)) * it.quantity).toFixed(2),
     }));
-    const total = "0.00";
+    const total = parseFloat(String(cart?.total || 0)).toFixed(2);
     const formData = form.getValues();
     const message = buildWhatsAppMessage(formData, items, total);
     const phone = sellerWhatsApp.replace(/\D/g, "");
@@ -175,7 +174,6 @@ export default function Checkout() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col lg:flex-row gap-8">
 
             <div className="flex-1 space-y-8">
-              {/* Delivery Info */}
               <div className="bg-white p-6 md:p-8 rounded-3xl border border-border shadow-sm">
                 <div className="flex items-center gap-3 mb-6 border-b border-border/50 pb-4">
                   <div className="bg-primary/10 p-2 rounded-full text-primary">
@@ -210,7 +208,6 @@ export default function Checkout() {
                 </div>
               </div>
 
-              {/* Delivery Method */}
               <div className="bg-white p-6 md:p-8 rounded-3xl border border-border shadow-sm">
                 <div className="flex items-center gap-3 mb-6 border-b border-border/50 pb-4">
                   <div className="bg-accent/10 p-2 rounded-full text-accent">
@@ -242,7 +239,6 @@ export default function Checkout() {
                 )} />
               </div>
 
-              {/* Payment Method */}
               <div className="bg-white p-6 md:p-8 rounded-3xl border border-border shadow-sm">
                 <div className="flex items-center gap-3 mb-6 border-b border-border/50 pb-4">
                   <div className="bg-[#25D366]/20 p-2 rounded-full">
@@ -251,7 +247,6 @@ export default function Checkout() {
                   <h2 className="text-xl font-bold">Payment Method</h2>
                 </div>
 
-                {/* WhatsApp — Primary (active) */}
                 <div className="rounded-xl border-2 border-[#25D366] bg-[#25D366]/5 p-4 mb-4 flex items-center gap-4">
                   <div className="w-5 h-5 rounded-full border-2 border-[#25D366] bg-[#25D366] flex items-center justify-center">
                     <div className="w-2 h-2 bg-white rounded-full" />
@@ -266,7 +261,6 @@ export default function Checkout() {
                   <MessageCircle className="w-6 h-6 text-[#25D366]" />
                 </div>
 
-                {/* Other methods — Coming Soon */}
                 <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider mb-3 ml-1">More payment options (coming soon)</p>
                 <div className="space-y-3 opacity-60 pointer-events-none select-none">
                   {[
@@ -292,7 +286,6 @@ export default function Checkout() {
               </div>
             </div>
 
-            {/* Order Summary */}
             <div className="w-full lg:w-[380px] shrink-0">
               <div className="bg-white rounded-3xl border border-border shadow-sm p-6 md:p-8 sticky top-24">
                 <h3 className="text-xl font-bold mb-6 font-serif border-b border-border/50 pb-4">Order Summary</h3>

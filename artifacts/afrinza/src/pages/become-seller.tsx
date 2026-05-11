@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { useCreateSeller } from "@workspace/api-client-react";
+import { useCreateSeller } from "@/hooks/use-marketplace";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,7 +28,7 @@ const CATEGORIES = [
   { id: "Services", label: "Services (Hair, Plumbing, Delivery & More)" },
   { id: "Groceries", label: "Groceries & African Spices" },
   { id: "Beauty", label: "Beauty & Skincare Products" },
-  { id: "Other", label: "Other" }
+  { id: "Other", label: "Other" },
 ];
 
 const sellerSchema = z.object({
@@ -60,24 +60,26 @@ export default function BecomeSeller() {
   });
 
   const onSubmit = (data: SellerFormValues) => {
-    // Generate random avatar and banner for demo purposes
     const categoryQuery = data.categories[0]?.toLowerCase() || "store";
-    
-    createSeller.mutate({
-      data: {
-        ...data,
-        avatarUrl: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(data.storeName)}&backgroundColor=00897b,e53935,1e88e5,ffb300`,
-        bannerUrl: `/images/seller-${categoryQuery === 'groceries' ? 'grocery' : categoryQuery}.png`
-      }
-    }, {
-      onSuccess: (seller) => {
-        setIsSuccess(true);
-        window.scrollTo(0, 0);
+
+    createSeller.mutate(
+      {
+        data: {
+          ...data,
+          avatarUrl: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(data.storeName)}&backgroundColor=00897b,e53935,1e88e5,ffb300`,
+          bannerUrl: `/images/seller-${categoryQuery === "groceries" ? "grocery" : categoryQuery}.png`,
+        },
       },
-      onError: () => {
-        toast.error("Failed to register. Please try again.");
+      {
+        onSuccess: () => {
+          setIsSuccess(true);
+          window.scrollTo(0, 0);
+        },
+        onError: () => {
+          toast.error("Failed to register. Please try again.");
+        },
       }
-    });
+    );
   };
 
   if (isSuccess) {
@@ -101,7 +103,6 @@ export default function BecomeSeller() {
 
   return (
     <div className="bg-muted/10 min-h-screen pb-20">
-      {/* Hero Header */}
       <div className="bg-primary pt-16 pb-32 relative overflow-hidden text-white">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay"></div>
         <div className="container mx-auto px-4 relative z-10 text-center max-w-3xl">
@@ -132,161 +133,121 @@ export default function BecomeSeller() {
 
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="storeName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-foreground font-semibold flex items-center gap-2">
-                          <Store className="w-4 h-4 text-muted-foreground" /> Store Name
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="e.g. Mama's Kitchen" className="h-12 bg-muted/30" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="ownerName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-foreground font-semibold flex items-center gap-2">
-                          <User className="w-4 h-4 text-muted-foreground" /> Your Name
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Full Name" className="h-12 bg-muted/30" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="location"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-foreground font-semibold flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-muted-foreground" /> State / City
-                        </FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger className="h-12 bg-muted/30">
-                              <SelectValue placeholder="Select location" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="max-h-64">
-                            {MALAYSIA_LOCATIONS.map((loc) => (
-                              <SelectItem key={loc.value} value={loc.value}>{loc.label}</SelectItem>
-                            ))}
-                            <SelectItem value="Other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="whatsapp"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-foreground font-semibold flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-muted-foreground" /> WhatsApp Number
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="+60 12-345 6789" className="h-12 bg-muted/30" {...field} />
-                        </FormControl>
-                        <FormDescription className="text-xs">
-                          Buyers will contact this number directly.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="categories"
-                  render={() => (
+                  <FormField control={form.control} name="storeName" render={({ field }) => (
                     <FormItem>
-                      <div className="mb-4">
-                        <FormLabel className="text-base font-semibold text-foreground">What do you sell?</FormLabel>
-                        <FormDescription>
-                          Select all that apply to your business.
-                        </FormDescription>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {CATEGORIES.map((category) => (
-                          <FormField
-                            key={category.id}
-                            control={form.control}
-                            name="categories"
-                            render={({ field }) => {
-                              return (
-                                <FormItem
-                                  key={category.id}
-                                  className="flex flex-row items-start space-x-3 space-y-0 rounded-xl border border-border p-4 bg-muted/10 hover:bg-muted/30 transition-colors cursor-pointer"
-                                >
-                                  <FormControl>
-                                    <Checkbox
-                                      checked={field.value?.includes(category.id)}
-                                      onCheckedChange={(checked) => {
-                                        return checked
-                                          ? field.onChange([...field.value, category.id])
-                                          : field.onChange(
-                                              field.value?.filter(
-                                                (value) => value !== category.id
-                                              )
-                                            )
-                                      }}
-                                    />
-                                  </FormControl>
-                                  <FormLabel className="font-normal cursor-pointer w-full text-sm leading-none">
-                                    {category.label}
-                                  </FormLabel>
-                                </FormItem>
-                              )
-                            }}
-                          />
-                        ))}
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-foreground font-semibold">Store Description</FormLabel>
+                      <FormLabel className="text-foreground font-semibold flex items-center gap-2">
+                        <Store className="w-4 h-4 text-muted-foreground" /> Store Name
+                      </FormLabel>
                       <FormControl>
-                        <Textarea 
-                          placeholder="Tell customers about your products, your origin, and what makes your store special..." 
-                          className="min-h-[120px] resize-none bg-muted/30 p-4"
-                          {...field} 
-                        />
+                        <Input placeholder="e.g. Mama's Kitchen" className="h-12 bg-muted/30" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-                  )}
-                />
+                  )} />
+
+                  <FormField control={form.control} name="ownerName" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground font-semibold flex items-center gap-2">
+                        <User className="w-4 h-4 text-muted-foreground" /> Your Name
+                      </FormLabel>
+                      <FormControl>
+                        <Input placeholder="Full Name" className="h-12 bg-muted/30" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField control={form.control} name="location" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground font-semibold flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-muted-foreground" /> State / City
+                      </FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="h-12 bg-muted/30">
+                            <SelectValue placeholder="Select location" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="max-h-64">
+                          {MALAYSIA_LOCATIONS.map((loc) => (
+                            <SelectItem key={loc.value} value={loc.value}>{loc.label}</SelectItem>
+                          ))}
+                          <SelectItem value="Other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+
+                  <FormField control={form.control} name="whatsapp" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground font-semibold flex items-center gap-2">
+                        <Phone className="w-4 h-4 text-muted-foreground" /> WhatsApp Number
+                      </FormLabel>
+                      <FormControl>
+                        <Input placeholder="+60 12-345 6789" className="h-12 bg-muted/30" {...field} />
+                      </FormControl>
+                      <FormDescription className="text-xs">
+                        Buyers will contact this number directly.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                </div>
+
+                <FormField control={form.control} name="categories" render={() => (
+                  <FormItem>
+                    <div className="mb-4">
+                      <FormLabel className="text-base font-semibold text-foreground">What do you sell?</FormLabel>
+                      <FormDescription>Select all that apply to your business.</FormDescription>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {CATEGORIES.map((category) => (
+                        <FormField key={category.id} control={form.control} name="categories" render={({ field }) => (
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-xl border border-border p-4 bg-muted/10 hover:bg-muted/30 transition-colors cursor-pointer">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value?.includes(category.id)}
+                                onCheckedChange={(checked) =>
+                                  checked
+                                    ? field.onChange([...field.value, category.id])
+                                    : field.onChange(field.value?.filter((v) => v !== category.id))
+                                }
+                              />
+                            </FormControl>
+                            <FormLabel className="font-normal cursor-pointer w-full text-sm leading-none">
+                              {category.label}
+                            </FormLabel>
+                          </FormItem>
+                        )} />
+                      ))}
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+
+                <FormField control={form.control} name="description" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-foreground font-semibold">Store Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Tell customers about your products, your origin, and what makes your store special..."
+                        className="min-h-[120px] resize-none bg-muted/30 p-4"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
 
                 <div className="pt-6 border-t border-border/50">
-                  <Button 
-                    type="submit" 
-                    size="lg" 
+                  <Button
+                    type="submit"
+                    size="lg"
                     className="w-full h-14 rounded-full text-base font-bold shadow-md hover:shadow-lg transition-all"
                     disabled={createSeller.isPending}
                   >

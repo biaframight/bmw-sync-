@@ -1,15 +1,10 @@
 import { useParams } from "wouter";
-import { 
-  useGetSeller, 
-  getGetSellerQueryKey,
-  useGetProducts,
-  getGetProductsQueryKey
-} from "@workspace/api-client-react";
+import { useGetSeller, useGetProducts } from "@/hooks/use-marketplace";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ProductCard } from "@/components/product-card";
-import { MapPin, MessageCircle, Crown, Store, Calendar, Star, Package } from "lucide-react";
+import { MapPin, MessageCircle, Crown, Store, Calendar, Package } from "lucide-react";
 import { StarRating } from "@/components/star-rating";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
@@ -18,19 +13,15 @@ export default function SellerDetail() {
   const params = useParams();
   const id = parseInt(params.id || "0");
 
-  const { data: seller, isLoading: isSellerLoading } = useGetSeller(id, {
-    query: { enabled: !!id, queryKey: getGetSellerQueryKey(id) }
-  });
-
-  const { data: productsData, isLoading: isProductsLoading } = useGetProducts(
-    { sellerId: id },
-    { query: { enabled: !!id, queryKey: getGetProductsQueryKey({ sellerId: id }) } }
-  );
+  const { data: seller, isLoading: isSellerLoading } = useGetSeller(id);
+  const { data: productsData, isLoading: isProductsLoading } = useGetProducts({ sellerId: id });
 
   const handleWhatsApp = () => {
     if (!seller) return;
-    const text = encodeURIComponent(`Hi ${seller.ownerName}, I'm interested in products from your store ${seller.storeName} on Afrinza.`);
-    window.open(`https://wa.me/${seller.whatsapp.replace(/\D/g, '')}?text=${text}`, '_blank');
+    const text = encodeURIComponent(
+      `Hi ${seller.ownerName}, I'm interested in products from your store ${seller.storeName} on Afrinza.`
+    );
+    window.open(`https://wa.me/${seller.whatsapp.replace(/\D/g, "")}?text=${text}`, "_blank");
   };
 
   if (isSellerLoading) {
@@ -65,28 +56,26 @@ export default function SellerDetail() {
 
   return (
     <div className="min-h-screen bg-muted/10 pb-20">
-      {/* Store Banner */}
       <div className="w-full h-48 md:h-72 bg-gradient-to-r from-primary to-secondary relative">
         {seller.bannerUrl && (
-          <img 
-            src={seller.bannerUrl} 
-            alt={seller.storeName} 
+          <img
+            src={seller.bannerUrl}
+            alt={seller.storeName}
             className="w-full h-full object-cover opacity-80 mix-blend-overlay"
           />
         )}
       </div>
 
       <div className="container mx-auto px-4">
-        {/* Store Profile Header */}
         <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-border -mt-20 md:-mt-24 relative z-10 mb-8">
           <div className="flex flex-col md:flex-row gap-6 items-start">
             <Avatar className="w-32 h-32 md:w-40 md:h-40 border-4 border-white shadow-md bg-white -mt-16 md:-mt-20 shrink-0">
-              <AvatarImage src={seller.avatarUrl} className="object-cover" />
+              <AvatarImage src={seller.avatarUrl ?? undefined} className="object-cover" />
               <AvatarFallback className="text-4xl font-bold bg-muted text-primary">
                 {seller.storeName.substring(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            
+
             <div className="flex-1 w-full">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 w-full">
                 <div>
@@ -100,33 +89,33 @@ export default function SellerDetail() {
                       </Badge>
                     )}
                   </div>
-                  
+
                   <p className="text-lg text-muted-foreground mb-4">By {seller.ownerName}</p>
-                  
+
                   <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-foreground">
                     <div className="flex items-center gap-1.5 bg-muted/50 px-3 py-1.5 rounded-full">
                       <MapPin className="w-4 h-4 text-primary" />
                       <span className="font-medium">{seller.location}</span>
                     </div>
-                    
+
                     <div className="flex items-center gap-1.5 bg-muted/50 px-3 py-1.5 rounded-full">
                       <StarRating rating={seller.rating} className="gap-0.5" starClassName="w-4 h-4" />
                       <span className="font-bold">{parseFloat(String(seller.rating)).toFixed(1)}</span>
                       <span className="text-muted-foreground">({seller.reviewCount})</span>
                     </div>
-                    
+
                     {seller.joinedAt && (
                       <div className="flex items-center gap-1.5 bg-muted/50 px-3 py-1.5 rounded-full text-muted-foreground">
                         <Calendar className="w-4 h-4" />
-                        <span>Joined {format(new Date(seller.joinedAt), 'MMM yyyy')}</span>
+                        <span>Joined {format(new Date(seller.joinedAt), "MMM yyyy")}</span>
                       </div>
                     )}
                   </div>
                 </div>
-                
+
                 <div className="shrink-0 w-full md:w-auto mt-4 md:mt-0">
-                  <Button 
-                    size="lg" 
+                  <Button
+                    size="lg"
                     className="w-full md:w-auto h-14 rounded-full border-2 bg-[#25D366] text-white hover:bg-[#20b858] font-bold shadow-md shadow-[#25D366]/20"
                     onClick={handleWhatsApp}
                   >
@@ -146,7 +135,7 @@ export default function SellerDetail() {
 
               {seller.categories && seller.categories.length > 0 && (
                 <div className="mt-6 flex flex-wrap gap-2">
-                  {seller.categories.map(cat => (
+                  {seller.categories.map((cat) => (
                     <Badge key={cat} variant="outline" className="bg-white px-4 py-1.5 border-border text-sm">
                       {cat}
                     </Badge>
@@ -157,7 +146,6 @@ export default function SellerDetail() {
           </div>
         </div>
 
-        {/* Store Products */}
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold font-serif flex items-center gap-2">
             <Package className="w-6 h-6 text-primary" /> Store Products

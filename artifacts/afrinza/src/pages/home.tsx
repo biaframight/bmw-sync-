@@ -1,9 +1,4 @@
-import { 
-  useGetFeaturedProducts, 
-  useGetFeaturedSellers, 
-  getGetFeaturedProductsQueryKey,
-  getGetFeaturedSellersQueryKey,
-} from "@workspace/api-client-react";
+import { useGetFeaturedProducts, useGetFeaturedSellers } from "@/hooks/use-marketplace";
 import { ProductCard } from "@/components/product-card";
 import { SellerCard } from "@/components/seller-card";
 import { HeroSlider } from "@/components/hero-slider";
@@ -21,13 +16,8 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [location, setLocationFilter] = useState("KL");
 
-  const { data: featuredProducts, isLoading: isProductsLoading } = useGetFeaturedProducts({
-    query: { queryKey: getGetFeaturedProductsQueryKey() }
-  });
-
-  const { data: featuredSellers, isLoading: isSellersLoading } = useGetFeaturedSellers({
-    query: { queryKey: getGetFeaturedSellersQueryKey() }
-  });
+  const { data: featuredProducts, isLoading: isProductsLoading } = useGetFeaturedProducts();
+  const { data: featuredSellers, isLoading: isSellersLoading } = useGetFeaturedSellers();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -231,9 +221,7 @@ export default function Home() {
       {/* ── Community Section ──────────────────────────────── */}
       <section className="container mx-auto px-4 py-16">
         <div className="bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] rounded-3xl p-8 md:p-14 relative overflow-hidden shadow-2xl">
-          {/* African pattern overlay */}
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds.png')] opacity-10" />
-          {/* Glow accents */}
           <div className="absolute -top-20 -right-20 w-80 h-80 bg-amber-500/20 rounded-full blur-[80px]" />
           <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-emerald-500/20 rounded-full blur-[80px]" />
 
@@ -273,7 +261,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Stats */}
             <div className="flex flex-row md:flex-col gap-4 shrink-0">
               {[
                 { value: "5,000+", label: "Community Members" },

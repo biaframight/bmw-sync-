@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, ShieldCheck, Crown } from "lucide-react";
 import { StarRating } from "./star-rating";
-import type { Product } from "@workspace/api-client-react";
+import type { Product } from "@/lib/supabase-db";
 import { motion } from "framer-motion";
 
 interface ProductCardProps {

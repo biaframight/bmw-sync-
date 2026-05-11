@@ -1,11 +1,5 @@
 import { useParams } from "wouter";
-import { 
-  useGetProduct, 
-  getGetProductQueryKey,
-  useGetReviews,
-  getGetReviewsQueryKey,
-  useAddToCart
-} from "@workspace/api-client-react";
+import { useGetProduct, useGetReviews, useAddToCart, keys } from "@/hooks/use-marketplace";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,38 +12,34 @@ import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function ProductDetail() {
   const params = useParams();
   const id = parseInt(params.id || "0");
   const [quantity, setQuantity] = useState(1);
   const sessionId = getSessionId();
+  const queryClient = useQueryClient();
 
-  const { data: product, isLoading, error } = useGetProduct(id, {
-    query: { enabled: !!id, queryKey: getGetProductQueryKey(id) }
-  });
-
-  const { data: reviewsData } = useGetReviews(
-    { productId: id },
-    { query: { enabled: !!id, queryKey: getGetReviewsQueryKey({ productId: id }) } }
-  );
-
+  const { data: product, isLoading, error } = useGetProduct(id);
+  const { data: reviewsData } = useGetReviews({ productId: id });
   const addToCart = useAddToCart();
 
   const handleAddToCart = () => {
     if (!product) return;
-    
+
     addToCart.mutate(
       { data: { sessionId, productId: product.id, quantity } },
       {
         onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: keys.cart(sessionId) });
           toast.success("Added to cart", {
-            description: `${quantity}x ${product.title} added to your cart.`
+            description: `${quantity}x ${product.title} added to your cart.`,
           });
         },
         onError: () => {
           toast.error("Failed to add to cart");
-        }
+        },
       }
     );
   };
@@ -57,7 +47,7 @@ export default function ProductDetail() {
   const handleWhatsApp = () => {
     if (!product) return;
     const text = encodeURIComponent(`Hi, I'm interested in "${product.title}" listed on Afrinza.`);
-    window.open(`https://wa.me/${product.sellerWhatsapp.replace(/\D/g, '')}?text=${text}`, '_blank');
+    window.open(`https://wa.me/${product.sellerWhatsapp.replace(/\D/g, "")}?text=${text}`, "_blank");
   };
 
   if (isLoading) {
@@ -92,21 +82,18 @@ export default function ProductDetail() {
   }
 
   const allImages = product.images?.length ? product.images : [product.imageUrl].filter(Boolean) as string[];
-  const mainImage = allImages[0] || '';
+  const mainImage = allImages[0] || "";
 
   return (
     <div className="bg-muted/10 min-h-screen pb-20">
-      {/* Breadcrumb could go here */}
-      
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-3xl shadow-sm border border-border overflow-hidden">
           <div className="flex flex-col lg:flex-row">
-            
-            {/* Image Section */}
+
             <div className="w-full lg:w-1/2 p-4 md:p-8">
-              <motion.div 
-                initial={{ opacity: 0 }} 
-                animate={{ opacity: 1 }} 
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 className="aspect-square rounded-2xl overflow-hidden bg-muted relative"
               >
                 {mainImage ? (
@@ -122,19 +109,18 @@ export default function ProductDetail() {
                   </Badge>
                 )}
               </motion.div>
-              
+
               {allImages.length > 1 && (
                 <div className="flex gap-4 mt-4 overflow-x-auto pb-2">
                   {allImages.map((img, idx) => (
                     <button key={idx} className="w-20 h-20 rounded-xl overflow-hidden border-2 border-transparent hover:border-primary shrink-0 transition-all">
-                      <img src={img} alt={`${product.title} ${idx+1}`} className="w-full h-full object-cover" />
+                      <img src={img} alt={`${product.title} ${idx + 1}`} className="w-full h-full object-cover" />
                     </button>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Product Details Section */}
             <div className="w-full lg:w-1/2 p-6 md:p-8 lg:border-l border-border/50 flex flex-col">
               <div className="flex flex-wrap gap-2 mb-4">
                 <Badge variant="outline" className="bg-muted text-foreground border-transparent">
@@ -160,7 +146,7 @@ export default function ProductDetail() {
                 </a>
                 <div className="w-1 h-1 rounded-full bg-border"></div>
                 <span className="text-sm text-muted-foreground">
-                  {product.stock ? `${product.stock} in stock` : 'In stock'}
+                  {product.stock ? `${product.stock} in stock` : "In stock"}
                 </span>
               </div>
 
@@ -174,39 +160,39 @@ export default function ProductDetail() {
 
               <div className="mt-auto space-y-6">
                 <Separator />
-                
+
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center gap-3 text-sm text-foreground">
                     <Truck className="w-5 h-5 text-muted-foreground" />
-                    <span className="font-medium">Delivery:</span> 
+                    <span className="font-medium">Delivery:</span>
                     <span className="text-muted-foreground">
-                      {product.deliveryOptions?.join(', ') || "Contact seller"}
+                      {product.deliveryOptions?.join(", ") || "Contact seller"}
                     </span>
                   </div>
                   <div className="flex items-center gap-3 text-sm text-foreground">
                     <CreditCard className="w-5 h-5 text-muted-foreground" />
-                    <span className="font-medium">Payment:</span> 
+                    <span className="font-medium">Payment:</span>
                     <span className="text-muted-foreground">
-                      {product.paymentMethods?.join(', ') || "Cash on delivery, Transfer"}
+                      {product.paymentMethods?.join(", ") || "Cash on delivery, Transfer"}
                     </span>
                   </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
                   <div className="flex items-center border border-border rounded-full h-14 bg-white w-full sm:w-32">
-                    <button 
+                    <button
                       className="w-10 flex items-center justify-center text-xl text-muted-foreground hover:text-foreground transition-colors"
-                      onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                     >-</button>
                     <div className="flex-1 text-center font-semibold">{quantity}</div>
-                    <button 
+                    <button
                       className="w-10 flex items-center justify-center text-xl text-muted-foreground hover:text-foreground transition-colors"
-                      onClick={() => setQuantity(q => (product.stock && q >= product.stock) ? q : q + 1)}
+                      onClick={() => setQuantity((q) => (product.stock && q >= product.stock ? q : q + 1))}
                     >+</button>
                   </div>
-                  
-                  <Button 
-                    size="lg" 
+
+                  <Button
+                    size="lg"
                     className="flex-1 h-14 rounded-full text-base font-bold shadow-md hover:shadow-lg transition-all"
                     onClick={handleAddToCart}
                     disabled={addToCart.isPending}
@@ -215,10 +201,10 @@ export default function ProductDetail() {
                     Add to Cart
                   </Button>
                 </div>
-                
-                <Button 
-                  variant="outline" 
-                  size="lg" 
+
+                <Button
+                  variant="outline"
+                  size="lg"
                   className="w-full h-14 rounded-full border-2 border-[#25D366] text-[#25D366] hover:bg-[#25D366]/5 font-bold"
                   onClick={handleWhatsApp}
                 >
@@ -230,15 +216,13 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* Seller Info & Reviews Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
-          {/* Seller Card */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-3xl p-6 shadow-sm border border-border">
               <h3 className="font-semibold text-lg mb-4">About the Seller</h3>
               <div className="flex items-center gap-4 mb-4">
                 <Avatar className="w-16 h-16 border border-border">
-                  <AvatarImage src={product.sellerAvatar} />
+                  <AvatarImage src={product.sellerAvatar ?? undefined} />
                   <AvatarFallback className="bg-primary/10 text-primary font-bold">
                     {product.sellerName.substring(0, 2).toUpperCase()}
                   </AvatarFallback>
@@ -259,7 +243,6 @@ export default function ProductDetail() {
             </div>
           </div>
 
-          {/* Reviews */}
           <div className="lg:col-span-2" id="reviews">
             <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-border">
               <div className="flex items-center justify-between mb-8">
@@ -287,7 +270,7 @@ export default function ProductDetail() {
                           <div>
                             <p className="font-semibold text-sm">{review.buyerName}</p>
                             <p className="text-xs text-muted-foreground">
-                              {format(new Date(review.createdAt), 'MMM d, yyyy')}
+                              {format(new Date(review.createdAt), "MMM d, yyyy")}
                             </p>
                           </div>
                         </div>

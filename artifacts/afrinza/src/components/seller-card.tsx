@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MapPin, Crown, Package } from "lucide-react";
 import { StarRating } from "./star-rating";
-import type { Seller } from "@workspace/api-client-react";
+import type { Seller } from "@/lib/supabase-db";
 import { motion } from "framer-motion";
 
 interface SellerCardProps {
@@ -31,7 +31,7 @@ export function SellerCard({ seller, index = 0 }: SellerCardProps) {
             )}
             <div className="absolute -bottom-10 left-4">
               <Avatar className="w-20 h-20 border-4 border-white shadow-sm bg-white">
-                <AvatarImage src={seller.avatarUrl} alt={seller.storeName} className="object-cover" />
+                <AvatarImage src={seller.avatarUrl ?? undefined} alt={seller.storeName} className="object-cover" />
                 <AvatarFallback className="text-xl font-bold bg-muted text-primary">
                   {seller.storeName.substring(0, 2).toUpperCase()}
                 </AvatarFallback>

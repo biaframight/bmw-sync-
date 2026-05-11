@@ -1,10 +1,10 @@
 import { Link, useLocation } from "wouter";
-import { 
-  useGetCart, 
-  getGetCartQueryKey,
+import {
+  useGetCart,
   useAddToCart,
-  useRemoveFromCart
-} from "@workspace/api-client-react";
+  useRemoveFromCart,
+  keys,
+} from "@/hooks/use-marketplace";
 import { getSessionId } from "@/lib/session";
 import { Button } from "@/components/ui/button";
 import { Trash2, ShoppingCart, ArrowRight } from "lucide-react";
@@ -17,23 +17,19 @@ export default function Cart() {
   const sessionId = getSessionId();
   const queryClient = useQueryClient();
 
-  const { data: cart, isLoading } = useGetCart(
-    { sessionId },
-    { query: { queryKey: getGetCartQueryKey({ sessionId }) } }
-  );
-
+  const { data: cart, isLoading } = useGetCart({ sessionId });
   const updateCartMutation = useAddToCart();
   const removeMutation = useRemoveFromCart();
 
   const updateQuantity = (productId: number, quantity: number) => {
     if (quantity < 1) return;
-    
+
     updateCartMutation.mutate(
       { data: { sessionId, productId, quantity } },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: getGetCartQueryKey({ sessionId }) });
-        }
+          queryClient.invalidateQueries({ queryKey: keys.cart(sessionId) });
+        },
       }
     );
   };
@@ -44,8 +40,8 @@ export default function Cart() {
       {
         onSuccess: () => {
           toast.success("Item removed from cart");
-          queryClient.invalidateQueries({ queryKey: getGetCartQueryKey({ sessionId }) });
-        }
+          queryClient.invalidateQueries({ queryKey: keys.cart(sessionId) });
+        },
       }
     );
   };
@@ -56,7 +52,7 @@ export default function Cart() {
         <h1 className="text-3xl font-bold font-serif mb-8">Your Cart</h1>
         <div className="flex flex-col md:flex-row gap-8">
           <div className="flex-1 space-y-4">
-            {[1, 2].map(i => (
+            {[1, 2].map((i) => (
               <Skeleton key={i} className="w-full h-32 rounded-2xl" />
             ))}
           </div>
@@ -89,7 +85,6 @@ export default function Cart() {
         </div>
       ) : (
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Cart Items */}
           <div className="flex-1">
             <div className="bg-white rounded-3xl border border-border shadow-sm overflow-hidden">
               <div className="hidden md:grid grid-cols-12 gap-4 p-6 border-b border-border text-sm font-medium text-muted-foreground bg-muted/20">
@@ -98,11 +93,10 @@ export default function Cart() {
                 <div className="col-span-2 text-right">Total</div>
                 <div className="col-span-1"></div>
               </div>
-              
+
               <div className="divide-y divide-border">
                 {cart.items.map((item) => (
                   <div key={item.id} className="p-6 flex flex-col md:grid md:grid-cols-12 gap-4 md:items-center">
-                    {/* Mobile: Product Info & Image */}
                     <div className="col-span-6 flex gap-4">
                       <div className="w-24 h-24 rounded-xl overflow-hidden bg-muted shrink-0">
                         {item.product?.imageUrl ? (
@@ -122,17 +116,16 @@ export default function Cart() {
                       </div>
                     </div>
 
-                    {/* Quantity Controls */}
                     <div className="col-span-3 flex justify-between md:justify-center items-center mt-4 md:mt-0">
                       <span className="md:hidden text-sm font-medium text-muted-foreground">Quantity:</span>
                       <div className="flex items-center border border-border rounded-full bg-muted/10 h-10 w-28">
-                        <button 
+                        <button
                           className="w-8 flex justify-center items-center text-muted-foreground hover:text-foreground disabled:opacity-50"
                           onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                           disabled={updateCartMutation.isPending || item.quantity <= 1}
                         >-</button>
                         <span className="flex-1 text-center font-medium text-sm">{item.quantity}</span>
-                        <button 
+                        <button
                           className="w-8 flex justify-center items-center text-muted-foreground hover:text-foreground disabled:opacity-50"
                           onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                           disabled={updateCartMutation.isPending}
@@ -140,7 +133,6 @@ export default function Cart() {
                       </div>
                     </div>
 
-                    {/* Price & Remove */}
                     <div className="col-span-2 flex justify-between md:justify-end items-center mt-2 md:mt-0">
                       <span className="md:hidden text-sm font-medium text-muted-foreground">Total:</span>
                       <span className="font-bold text-primary">
@@ -149,9 +141,9 @@ export default function Cart() {
                     </div>
 
                     <div className="col-span-1 flex justify-end md:justify-center mt-2 md:mt-0 border-t border-border pt-4 md:pt-0 md:border-0">
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         className="text-destructive hover:text-destructive hover:bg-destructive/10"
                         onClick={() => removeItem(item.id)}
                         disabled={removeMutation.isPending}
@@ -165,11 +157,10 @@ export default function Cart() {
             </div>
           </div>
 
-          {/* Order Summary */}
           <div className="w-full lg:w-[340px] shrink-0">
             <div className="bg-white rounded-3xl border border-border shadow-sm p-6 sticky top-24">
               <h3 className="text-xl font-bold mb-6 font-serif">Order Summary</h3>
-              
+
               <div className="space-y-4 mb-6 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Subtotal ({cart.itemCount} items)</span>
@@ -185,13 +176,13 @@ export default function Cart() {
                 </div>
               </div>
 
-              <Button 
-                className="w-full h-14 rounded-full text-base font-bold shadow-md hover:shadow-lg transition-all mb-4" 
+              <Button
+                className="w-full h-14 rounded-full text-base font-bold shadow-md hover:shadow-lg transition-all mb-4"
                 onClick={() => setLocation("/checkout")}
               >
                 Proceed to Checkout <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
-              
+
               <p className="text-xs text-center text-muted-foreground">
                 You won't be charged yet. Payment is handled directly with sellers.
               </p>

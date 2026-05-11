@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { useGetProducts, getGetProductsQueryKey } from "@workspace/api-client-react";
+import { useGetProducts } from "@/hooks/use-marketplace";
 import { ProductCard } from "@/components/product-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Filter, SlidersHorizontal, X } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Search, Filter } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
   Sheet,
@@ -15,23 +14,22 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { 
+import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useQuery } from "@tanstack/react-query";
 
 export default function Products() {
-  const [location, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
   const searchParams = new URLSearchParams(window.location.search);
-  
+
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [category, setCategory] = useState(searchParams.get("category") || "");
   const [locFilter, setLocFilter] = useState(searchParams.get("location") || "");
-  
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     updateUrl();
@@ -45,14 +43,11 @@ export default function Products() {
     setLocation(`/products?${params.toString()}`);
   };
 
-  const { data, isLoading } = useGetProducts(
-    { 
-      search: search || undefined, 
-      category: category || undefined, 
-      location: locFilter || undefined 
-    },
-    { query: { queryKey: getGetProductsQueryKey({ search, category, location: locFilter }) } }
-  );
+  const { data, isLoading } = useGetProducts({
+    search: search || undefined,
+    category: category || undefined,
+    location: locFilter || undefined,
+  });
 
   const clearFilters = () => {
     setSearch("");
@@ -72,7 +67,7 @@ export default function Products() {
             </Button>
           )}
         </div>
-        
+
         <Accordion type="multiple" defaultValue={["category", "location"]} className="w-full">
           <AccordionItem value="category" className="border-b-0">
             <AccordionTrigger className="hover:no-underline py-3">Category</AccordionTrigger>
@@ -101,7 +96,7 @@ export default function Products() {
               </RadioGroup>
             </AccordionContent>
           </AccordionItem>
-          
+
           <AccordionItem value="location" className="border-b-0 mt-4">
             <AccordionTrigger className="hover:no-underline py-3">Location</AccordionTrigger>
             <AccordionContent>
@@ -157,7 +152,6 @@ export default function Products() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Header */}
       <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold font-serif text-foreground">Explore Marketplace</h1>
@@ -165,18 +159,18 @@ export default function Products() {
             {isLoading ? "Loading products..." : `${data?.total || 0} items found`}
           </p>
         </div>
-        
+
         <div className="flex items-center gap-2">
           <form onSubmit={handleSearch} className="relative w-full md:w-64 lg:w-80">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input 
-              placeholder="Search products..." 
+            <Input
+              placeholder="Search products..."
               className="pl-9 pr-4 bg-white"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </form>
-          
+
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="md:hidden shrink-0">
@@ -194,14 +188,12 @@ export default function Products() {
       </div>
 
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Sidebar Filters - Desktop */}
         <aside className="hidden md:block w-64 shrink-0">
           <div className="sticky top-24 bg-white border border-border p-6 rounded-2xl shadow-sm">
             <FilterContent />
           </div>
         </aside>
 
-        {/* Product Grid */}
         <div className="flex-1">
           {isLoading ? (
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
