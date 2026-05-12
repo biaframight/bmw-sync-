@@ -173,11 +173,14 @@ export default function Products() {
           <form onSubmit={handleSearch} className="relative w-full md:w-64 lg:w-80">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
+              type="search"
+              enterKeyHint="search"
               placeholder="Search products..."
               className="pl-9 pr-4 bg-white"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
+            <button type="submit" className="sr-only">Search</button>
           </form>
 
           <Sheet>

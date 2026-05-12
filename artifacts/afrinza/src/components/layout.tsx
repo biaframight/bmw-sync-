@@ -143,11 +143,14 @@ export function Layout({ children }: LayoutProps) {
             <form onSubmit={handleSearch} className="relative w-full flex items-center">
               <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
               <Input
+                type="search"
+                enterKeyHint="search"
                 placeholder="What are you looking for?"
                 className="pl-9 pr-4 rounded-full bg-muted/50 border-transparent focus-visible:ring-primary/20 h-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              <button type="submit" className="sr-only">Search</button>
             </form>
           </div>
 
@@ -219,11 +222,14 @@ export function Layout({ children }: LayoutProps) {
           <form onSubmit={handleSearch} className="relative w-full flex items-center">
             <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
             <Input
+              type="search"
+              enterKeyHint="search"
               placeholder="Search products..."
               className="pl-9 pr-4 rounded-full bg-muted/50 border-transparent focus-visible:ring-primary/20 h-10"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
+            <button type="submit" className="sr-only">Search</button>
           </form>
         </div>
       </header>
