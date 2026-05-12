@@ -25,18 +25,18 @@ const SERVICE_STEPS = [
 
 function StepGrid({ steps }: { steps: typeof BUYER_STEPS }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
       {steps.map((s, i) => (
         <div key={s.step} className="relative flex flex-col items-center text-center">
           {i < steps.length - 1 && (
             <div className="hidden lg:block absolute top-8 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-0.5 bg-border z-0" />
           )}
-          <div className={`w-16 h-16 ${s.color} rounded-2xl flex items-center justify-center mb-4 shadow-lg relative z-10`}>
-            {s.icon}
+          <div className={`w-12 h-12 md:w-16 md:h-16 ${s.color} rounded-2xl flex items-center justify-center mb-3 md:mb-4 shadow-lg relative z-10`}>
+            <span className="scale-75 md:scale-100">{s.icon}</span>
           </div>
-          <span className="text-xs font-bold text-muted-foreground tracking-widest uppercase mb-2">Step {s.step}</span>
-          <h3 className="font-bold text-base mb-2">{s.title}</h3>
-          <p className="text-muted-foreground text-sm leading-relaxed">{s.desc}</p>
+          <span className="text-[10px] md:text-xs font-bold text-muted-foreground tracking-widest uppercase mb-1.5 md:mb-2">Step {s.step}</span>
+          <h3 className="font-bold text-sm md:text-base mb-1.5 md:mb-2">{s.title}</h3>
+          <p className="text-muted-foreground text-xs md:text-sm leading-relaxed">{s.desc}</p>
         </div>
       ))}
     </div>
@@ -47,7 +47,7 @@ export default function HowItWorks() {
   return (
     <div className="min-h-screen pb-20">
       {/* Hero */}
-      <section className="bg-gradient-to-b from-primary/10 to-background pt-16 pb-16 px-4 text-center">
+      <section className="bg-gradient-to-b from-primary/10 to-background pt-12 pb-10 md:pt-16 md:pb-12 px-4 text-center">
         <div className="container mx-auto max-w-3xl">
           <span className="inline-block py-1.5 px-4 rounded-full bg-primary/10 text-primary font-medium text-sm mb-4 border border-primary/20">
             Simple & Transparent
@@ -62,7 +62,7 @@ export default function HowItWorks() {
       </section>
 
       {/* For Buyers */}
-      <section className="container mx-auto px-4 py-16 max-w-6xl">
+      <section className="container mx-auto px-4 py-10 md:py-16 max-w-6xl">
         <div className="mb-10">
           <span className="inline-block bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-3">For Buyers</span>
           <h2 className="text-3xl font-bold font-serif">How to Buy on Afrinza</h2>
@@ -78,7 +78,7 @@ export default function HowItWorks() {
       <div className="bg-muted/30 border-y border-border/50 py-1" />
 
       {/* For Sellers */}
-      <section className="container mx-auto px-4 py-16 max-w-6xl">
+      <section className="container mx-auto px-4 py-10 md:py-16 max-w-6xl">
         <div className="mb-10">
           <span className="inline-block bg-amber-100 text-amber-700 text-xs font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-3">For Sellers</span>
           <h2 className="text-3xl font-bold font-serif">How to Sell on Afrinza</h2>
@@ -94,7 +94,7 @@ export default function HowItWorks() {
       <div className="bg-muted/30 border-y border-border/50 py-1" />
 
       {/* For Service Providers */}
-      <section className="container mx-auto px-4 py-16 max-w-6xl">
+      <section className="container mx-auto px-4 py-10 md:py-16 max-w-6xl">
         <div className="mb-10">
           <span className="inline-block bg-blue-100 text-blue-700 text-xs font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-3">For Service Providers</span>
           <h2 className="text-3xl font-bold font-serif">How to List Your Services</h2>

@@ -97,7 +97,7 @@ export function HeroSlider() {
         </motion.div>
       </AnimatePresence>
 
-      <div className="absolute inset-0 flex flex-col justify-end pb-12 md:pb-16 px-6 md:px-16">
+      <div className="absolute inset-0 flex flex-col justify-end pb-12 md:pb-16 pl-14 pr-5 md:px-16">
         <AnimatePresence mode="wait">
           <motion.div
             key={`content-${current}`}
@@ -110,10 +110,10 @@ export function HeroSlider() {
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
               {slide.tag}
             </span>
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white font-serif mb-3 leading-tight drop-shadow-xl max-w-2xl">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white font-serif mb-3 leading-tight drop-shadow-xl max-w-2xl">
               {slide.title}
             </h2>
-            <p className="text-white/80 text-sm md:text-base max-w-lg mb-6 leading-relaxed">
+            <p className="text-white/80 text-xs sm:text-sm md:text-base max-w-lg mb-5 md:mb-6 leading-relaxed">
               {slide.subtitle}
             </p>
             <Link href={slide.cta.href}>
@@ -129,11 +129,11 @@ export function HeroSlider() {
         {current + 1} / {slides.length}
       </div>
 
-      <button onClick={prev} className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white rounded-full p-2.5 backdrop-blur-sm transition-all hover:scale-110 border border-white/10" aria-label="Previous">
-        <ChevronLeft className="w-5 h-5" />
+      <button onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1.5 md:p-2.5 backdrop-blur-sm transition-all hover:scale-110 border border-white/10" aria-label="Previous">
+        <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
       </button>
-      <button onClick={next} className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white rounded-full p-2.5 backdrop-blur-sm transition-all hover:scale-110 border border-white/10" aria-label="Next">
-        <ChevronRight className="w-5 h-5" />
+      <button onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1.5 md:p-2.5 backdrop-blur-sm transition-all hover:scale-110 border border-white/10" aria-label="Next">
+        <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
       </button>
 
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 items-center">

@@ -281,15 +281,15 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="flex flex-row md:flex-col gap-4 shrink-0">
+            <div className="grid grid-cols-3 md:flex md:flex-col gap-3 md:gap-4 shrink-0 w-full md:w-auto">
               {[
                 { value: "5,000+", label: "Community Members" },
                 { value: "200+", label: "African Sellers" },
                 { value: "10+", label: "Cities in Malaysia" },
               ].map((stat) => (
-                <div key={stat.label} className="bg-white/8 border border-white/10 rounded-2xl px-6 py-5 text-center backdrop-blur-sm min-w-[130px]">
-                  <p className="text-3xl font-bold text-amber-400 font-serif">{stat.value}</p>
-                  <p className="text-white/60 text-xs mt-1">{stat.label}</p>
+                <div key={stat.label} className="bg-white/8 border border-white/10 rounded-2xl px-3 py-4 md:px-6 md:py-5 text-center backdrop-blur-sm">
+                  <p className="text-xl md:text-3xl font-bold text-amber-400 font-serif">{stat.value}</p>
+                  <p className="text-white/60 text-[10px] md:text-xs mt-1 leading-tight">{stat.label}</p>
                 </div>
               ))}
             </div>
