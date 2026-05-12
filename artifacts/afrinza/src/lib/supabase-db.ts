@@ -189,7 +189,10 @@ export async function getProducts(filters: {
 
   const limit = filters.limit ?? 50;
   const offset = filters.offset ?? 0;
-  query = query.range(offset, offset + limit - 1);
+  query = query
+    .order("is_sponsored", { ascending: false })
+    .order("created_at", { ascending: false })
+    .range(offset, offset + limit - 1);
 
   const { data, error } = await query;
   throwIfError(data, error, "getProducts");
@@ -320,10 +323,12 @@ export async function updateSeller(
 }
 
 export async function getProductsBySellerId(sellerId: number): Promise<Product[]> {
+
   const { data, error } = await supabase
     .from("products")
     .select("*")
     .eq("seller_id", sellerId)
+    .order("is_sponsored", { ascending: false })
     .order("created_at", { ascending: false });
   throwIfError(data, error, "getProductsBySellerId");
   return (data as Record<string, any>[]).map(mapProduct);
