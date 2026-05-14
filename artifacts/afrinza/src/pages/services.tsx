@@ -94,7 +94,7 @@ export default function Services() {
     }
 
     // Step 2: Send WhatsApp notification to Afrinza team
-    const waNumber = "60173346205";
+    const waNumber = "60166088141";
     const msg = encodeURIComponent(
       `*New Service Provider — Afrinza*\n\n*Name:* ${data.providerName}\n*Business:* ${data.businessName}\n*Services:* ${data.serviceTypes.join(", ")}\n*Location:* ${data.location}\n*WhatsApp:* ${data.whatsapp}\n*Experience:* ${data.experience}\n*Description:* ${data.description}\n*Login Email:* ${authEmail || user?.email || "N/A"}`
     );

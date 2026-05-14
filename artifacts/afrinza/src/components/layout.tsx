@@ -251,7 +251,7 @@ export function Layout({ children }: LayoutProps) {
                 🇲🇾 Live in Malaysia &nbsp;·&nbsp; 🇬🇧 🇨🇦 🇦🇪 🇩🇪 🇺🇸 Coming soon
               </p>
               <a
-                href="https://wa.me/60173346205"
+                href="https://wa.me/60166088141"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-full border border-primary/20 text-primary hover:bg-primary/5 px-4 py-2 text-sm font-medium transition-colors"

@@ -116,7 +116,7 @@ export default function HowItWorks() {
             Reach us directly on WhatsApp or join our Telegram community for help and updates.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="https://wa.me/60173346205" target="_blank" rel="noopener noreferrer"
+            <a href="https://wa.me/60166088141" target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe59] text-white font-bold px-8 py-3.5 rounded-full transition-all hover:scale-105">
               <MessageCircle className="w-5 h-5" /> WhatsApp Support
             </a>

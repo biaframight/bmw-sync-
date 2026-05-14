@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-const ADMIN_WHATSAPP = "60173346205";
+const ADMIN_WHATSAPP = "60166088141";
 
 const checkoutSchema = z.object({
   buyerName: z.string().min(2, "Name must be at least 2 characters"),
