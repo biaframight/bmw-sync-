@@ -191,7 +191,7 @@ export async function getProducts(filters: {
   const offset = filters.offset ?? 0;
   query = query
     .order("is_sponsored", { ascending: false })
-    .order("created_at", { ascending: false })
+    .order("created_at", { ascending: true })
     .range(offset, offset + limit - 1);
 
   const { data, error } = await query;
@@ -229,6 +229,10 @@ export async function getSellers(filters: {
 }): Promise<{ sellers: Seller[]; total: number }> {
   let query = supabase.from("sellers").select("*");
   if (filters.location) query = query.ilike("location", `%${filters.location}%`);
+
+  query = query
+    .order("is_premium", { ascending: false })
+    .order("joined_at", { ascending: true });
 
   const { data, error } = await query;
   throwIfError(data, error, "getSellers");
@@ -329,7 +333,7 @@ export async function getProductsBySellerId(sellerId: number): Promise<Product[]
     .select("*")
     .eq("seller_id", sellerId)
     .order("is_sponsored", { ascending: false })
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: true });
   throwIfError(data, error, "getProductsBySellerId");
   return (data as Record<string, any>[]).map(mapProduct);
 }
