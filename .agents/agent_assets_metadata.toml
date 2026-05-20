@@ -60,3 +60,27 @@ id = "J6eMQSRiVhs9zEAwSM9Q4"
 uri = "file://artifacts/afrinza/public/images/seller-grocery.png"
 type = "image"
 title = "African grocery store"
+
+[[generated]]
+id = "Hmn7LM56l6HW4Up-QQ-1L"
+uri = "file://artifacts/afrinza-ad/public/images/shelf.png"
+type = "image"
+title = "Person empty shelf"
+
+[[generated]]
+id = "5EH9Jpan7aYZWwk9Gi9fY"
+uri = "file://artifacts/afrinza-ad/public/images/food.png"
+type = "image"
+title = "African food jollof"
+
+[[generated]]
+id = "KX0MqmKWmTu-6n1vKwfSA"
+uri = "file://artifacts/afrinza-ad/public/images/fashion.png"
+type = "image"
+title = "African fashion fabric"
+
+[[generated]]
+id = "qY0akmDDg7sC9OYslB1ll"
+uri = "file://artifacts/afrinza-ad/public/images/chat.png"
+type = "image"
+title = "3D chat icon"
