@@ -35,6 +35,10 @@ const ISSUE_LABELS: Record<string, string> = {
   trash_full: "Trash Full",
 };
 
+// NEXT_PUBLIC_BASE_PATH is injected at build time from next.config.ts
+// It is "/bmw-sync" on Replit and "" when deployed standalone (e.g. Vercel).
+const APP_BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 function getBaseUrl() {
   if (typeof window !== "undefined") {
     return window.location.origin;
@@ -695,8 +699,8 @@ function OutletCard({
     }
   }
 
-  const staffUrl = `${baseUrl}/bmw-sync/log/${outlet.staff_qr_token}`;
-  const customerUrl = `${baseUrl}/bmw-sync/feedback/${outlet.customer_qr_token}`;
+  const staffUrl = `${baseUrl}${APP_BASE}/log/${outlet.staff_qr_token}`;
+  const customerUrl = `${baseUrl}${APP_BASE}/feedback/${outlet.customer_qr_token}`;
 
   const showingStaff =
     activeQR?.outletId === outlet.id && activeQR?.type === "staff";
