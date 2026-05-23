@@ -1,15 +1,25 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-export async function createServerSupabaseClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+function resolveCredentials(): { url: string; key: string } {
+  let url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  let key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!url || !key) {
     throw new Error(
       "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables.",
     );
   }
+
+  if (url.startsWith("eyJ") && key.startsWith("https://")) {
+    [url, key] = [key, url];
+  }
+
+  return { url, key };
+}
+
+export async function createServerSupabaseClient() {
+  const { url, key } = resolveCredentials();
 
   const cookieStore = await cookies();
 

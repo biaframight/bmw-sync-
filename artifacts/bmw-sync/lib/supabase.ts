@@ -106,22 +106,33 @@ export type Database = {
   };
 };
 
+function resolveCredentials(): { url: string; key: string } | null {
+  let url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  let key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!url || !key) return null;
+
+  if (url.startsWith("eyJ") && key.startsWith("https://")) {
+    [url, key] = [key, url];
+  }
+
+  if (!url.startsWith("https://")) return null;
+
+  return { url, key };
+}
+
 export function isSupabaseConfigured(): boolean {
-  return !!(
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
+  return resolveCredentials() !== null;
 }
 
 export function createClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const creds = resolveCredentials();
 
-  if (!url || !key) {
+  if (!creds) {
     throw new Error(
-      "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables.",
+      "Missing or invalid NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables.",
     );
   }
 
-  return createBrowserClient(url, key);
+  return createBrowserClient(creds.url, creds.key);
 }
