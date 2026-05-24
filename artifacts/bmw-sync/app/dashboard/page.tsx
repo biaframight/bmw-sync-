@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { QRCodeCanvas } from "qrcode.react";
 import { createClient, type Database } from "@/lib/supabase";
 import {
@@ -347,13 +348,13 @@ export default function DashboardPage() {
               </span>
             )}
             {userEmail === "biaframight@gmail.com" && (
-              <a
+              <Link
                 href="/admin"
                 className="flex items-center gap-1.5 text-xs font-semibold bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition"
               >
                 <ShieldCheck className="w-3.5 h-3.5" />
                 Admin
-              </a>
+              </Link>
             )}
             <button
               onClick={handleSignOut}
